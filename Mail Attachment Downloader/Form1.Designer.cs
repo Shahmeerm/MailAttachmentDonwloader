@@ -258,6 +258,7 @@
             this.logTextBox.Size = new System.Drawing.Size(344, 312);
             this.logTextBox.TabIndex = 0;
             this.logTextBox.Text = "";
+            this.logTextBox.TextChanged += new System.EventHandler(this.logTextBox_TextChanged);
             // 
             // systemTray
             // 

@@ -89,5 +89,11 @@ namespace Mail_Attachment_Downloader
                 MessageBox.Show("Wrong Username/Password");
             }
         }
+
+        private void logTextBox_TextChanged(object sender, EventArgs e)
+        {
+            logTextBox.SelectionStart = logTextBox.Text.Length;
+            logTextBox.ScrollToCaret();
+        }
     }
 }

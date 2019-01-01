@@ -74,17 +74,14 @@ namespace Mail_Attachment_Downloader
                                 if (attachment is MessagePart)
                                 {
                                     var part = (MessagePart)attachment;
-
-                                    logger.Info("Found An Attachment - Saving it - " + fileName);
+                                    logger.Info("Found -> " + fileName);
                                     part.Message.WriteTo(stream);
-                                    logger.Info("Done Saving the Attachment " + fileName);
                                 }
                                 else
                                 {
                                     var part = (MimePart)attachment;
-                                    logger.Info("Found An Attachment - Saving it - " + fileName);
+                                    logger.Info("Found -> " + fileName);
                                     part.Content.DecodeTo(stream);
-                                    logger.Info("Done Saving the Attachment " + fileName);
                                 }
                             }
                         }
