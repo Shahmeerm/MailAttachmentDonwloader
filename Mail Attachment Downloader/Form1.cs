@@ -5,9 +5,14 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Dart.Mail;
+using MailKit.Net.Imap;
+using MailKit.Security;
+using NLog.Windows.Forms;
 
 namespace Mail_Attachment_Downloader
 {
@@ -61,6 +66,27 @@ namespace Mail_Attachment_Downloader
             else
             {
                 portText.Enabled = false;
+            }
+        }
+
+        private void syncBtn_Click(object sender, EventArgs e)
+        {
+            RichTextBoxTarget rtb = new RichTextBoxTarget();
+            rtb.FormName = "Form1";
+            rtb.ControlName = "logTextBox";
+
+            try
+            {
+                Mailer mailer = new Mailer("arswurfel@gmail.com", "Ars2763!", 993, "imap.gmail.com", true, rtb);
+                ImapClient client = mailer.ConnectWithImap();
+            }
+            catch (SocketException)
+            {
+                MessageBox.Show("No Internet Connection");
+            }
+            catch (AuthenticationException)
+            {
+                MessageBox.Show("Wrong Username/Password");
             }
         }
     }

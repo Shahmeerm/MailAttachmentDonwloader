@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.exitBtn = new System.Windows.Forms.Button();
             this.syncBtn = new System.Windows.Forms.Button();
             this.chooseBtn = new System.Windows.Forms.Button();
@@ -48,9 +49,8 @@
             this.passText = new System.Windows.Forms.TextBox();
             this.emailText = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.logTextBox = new System.Windows.Forms.RichTextBox();
             this.systemTray = new System.Windows.Forms.NotifyIcon(this.components);
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -82,6 +82,17 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Global Settings";
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(231, 141);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(64, 19);
+            this.checkBox1.TabIndex = 16;
+            this.checkBox1.Text = "Default";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // exitBtn
             // 
             this.exitBtn.Location = new System.Drawing.Point(220, 263);
@@ -99,6 +110,7 @@
             this.syncBtn.TabIndex = 14;
             this.syncBtn.Text = "Sync";
             this.syncBtn.UseVisualStyleBackColor = true;
+            this.syncBtn.Click += new System.EventHandler(this.syncBtn_Click);
             // 
             // chooseBtn
             // 
@@ -226,7 +238,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.richTextBox1);
+            this.groupBox2.Controls.Add(this.logTextBox);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox2.Location = new System.Drawing.Point(346, 10);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(5);
@@ -237,15 +249,15 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Logs";
             // 
-            // richTextBox1
+            // logTextBox
             // 
-            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(7, 21);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(344, 312);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
+            this.logTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.logTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.logTextBox.Location = new System.Drawing.Point(7, 21);
+            this.logTextBox.Name = "logTextBox";
+            this.logTextBox.Size = new System.Drawing.Size(344, 312);
+            this.logTextBox.TabIndex = 0;
+            this.logTextBox.Text = "";
             // 
             // systemTray
             // 
@@ -253,17 +265,6 @@
             this.systemTray.Text = "Mail Attachment Downloader";
             this.systemTray.Visible = true;
             this.systemTray.DoubleClick += new System.EventHandler(this.systemTray_DoubleClick);
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(231, 141);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(64, 19);
-            this.checkBox1.TabIndex = 16;
-            this.checkBox1.Text = "Default";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // Form1
             // 
@@ -306,7 +307,7 @@
         private System.Windows.Forms.Button exitBtn;
         private System.Windows.Forms.Button syncBtn;
         private System.Windows.Forms.NotifyIcon systemTray;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox logTextBox;
         private System.Windows.Forms.CheckBox checkBox1;
     }
 }
