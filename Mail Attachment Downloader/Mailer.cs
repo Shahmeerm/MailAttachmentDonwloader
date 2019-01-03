@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Dart.Mail;
-using Dart;
-using System.Security.Authentication;
 using MailKit.Net.Pop3;
 using MailKit.Net.Imap;
-using NLog.Targets.Wrappers;
 using NLog; 
 using MailKit;
 using MimeKit;
@@ -46,7 +39,7 @@ namespace Mail_Attachment_Downloader
             SSL = isSSL;
         }
 
-        public ImapClient ConnectWithImap()
+        async public Task<ImapClient> SaveAttachmentsImapAsync()
         {
             using ( imapClient = new ImapClient())
             {
@@ -55,16 +48,18 @@ namespace Mail_Attachment_Downloader
                 try
                 {
                     logger.Info("Connecting to " + email);
-                    imapClient.Connect(host, port, SSL);
-                    imapClient.Authenticate(email, pass);
+                    await imapClient.ConnectAsync(host, port, SSL);
+                    await imapClient.AuthenticateAsync(email, pass);
                     logger.Info("Connected to " + email);
 
                     var inbox = imapClient.Inbox;
-                    inbox.Open(FolderAccess.ReadWrite);
+                    await inbox.OpenAsync(FolderAccess.ReadWrite);
 
-                    foreach (var uid in inbox.Search(SearchQuery.NotSeen))
+                    var searchResult = await inbox.SearchAsync(SearchQuery.Seen);
+
+                    foreach (var uid in searchResult)
                     {
-                        var message = inbox.GetMessage(uid);
+                        var message = await inbox.GetMessageAsync(uid);
                         
                         foreach (var attachment in message.Attachments)
                         {
@@ -75,18 +70,18 @@ namespace Mail_Attachment_Downloader
                                 {
                                     var part = (MessagePart)attachment;
                                     logger.Info("Found -> " + fileName);
-                                    part.Message.WriteTo(stream);
+                                    await part.Message.WriteToAsync(stream);
                                 }
                                 else
                                 {
                                     var part = (MimePart)attachment;
                                     logger.Info("Found -> " + fileName);
-                                    part.Content.DecodeTo(stream);
+                                    await part.Content.DecodeToAsync(stream);
                                 }
                             }
                         }
 
-                        inbox.AddFlags(uid, MessageFlags.Seen, true);
+                        await inbox.AddFlagsAsync(uid, MessageFlags.Seen, true);
                     }
                 }
                 catch (System.Net.Sockets.SocketException)
@@ -134,7 +129,7 @@ namespace Mail_Attachment_Downloader
             {
                 LoggingConfiguration logConfig = new LoggingConfiguration();
 
-                logConfig.AddTarget("richTextBox", rtbTarget);
+                //logConfig.AddTarget("richTextBox", rtbTarget);
 
                 FileTarget fileTarget = new FileTarget();
                 logConfig.AddTarget("logFile", fileTarget);

@@ -69,7 +69,7 @@ namespace Mail_Attachment_Downloader
             }
         }
 
-        private void syncBtn_Click(object sender, EventArgs e)
+        async private void syncBtn_Click(object sender, EventArgs e)
         {
             RichTextBoxTarget rtb = new RichTextBoxTarget();
             rtb.FormName = "Form1";
@@ -77,8 +77,9 @@ namespace Mail_Attachment_Downloader
 
             try
             {
+                syncBtn.Enabled = false; 
                 Mailer mailer = new Mailer("arswurfel@gmail.com", "Ars2763!", 993, "imap.gmail.com", true, rtb);
-                ImapClient client = mailer.ConnectWithImap();
+                ImapClient client = await mailer.SaveAttachmentsImapAsync();
             }
             catch (SocketException)
             {
@@ -87,6 +88,9 @@ namespace Mail_Attachment_Downloader
             catch (AuthenticationException)
             {
                 MessageBox.Show("Wrong Username/Password");
+            }
+            finally {
+                syncBtn.Enabled = true; 
             }
         }
 
