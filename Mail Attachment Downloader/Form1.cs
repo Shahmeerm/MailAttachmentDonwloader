@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dart.Mail;
 using MailKit.Net.Imap;
+using MailKit.Net.Pop3;
 using MailKit.Security;
 using NLog.Windows.Forms;
 
@@ -59,7 +60,7 @@ namespace Mail_Attachment_Downloader
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (!checkBox1.Checked)
+            if (!sslCheck.Checked)
             {
                 //TODO
             }
@@ -77,9 +78,15 @@ namespace Mail_Attachment_Downloader
 
             try
             {
-                syncBtn.Enabled = false; 
-                Mailer mailer = new Mailer("arswurfel@gmail.com", "Ars2763!", 993, "imap.gmail.com", true, rtb);
-                ImapClient client = await mailer.SaveAttachmentsImapAsync();
+                int port = int.Parse(portText.Text);
+                syncBtn.Enabled = false;
+                Mailer mailer = new Mailer(emailText.Text, passText.Text, port ,hostText.Text, sslCheck.Checked, saveText.Text ,rtb);
+
+                if (imapCheck.Checked)
+                    await mailer.SaveAttachmentsImapAsync();
+                else
+                    await mailer.SaveAttachmentsPOPAsync();
+
             }
             catch (SocketException)
             {
@@ -89,8 +96,12 @@ namespace Mail_Attachment_Downloader
             {
                 MessageBox.Show("Wrong Username/Password");
             }
+            catch (FormatException)
+            {
+                MessageBox.Show("Port Number is not Correct");
+            }
             finally {
-                syncBtn.Enabled = true; 
+                syncBtn.Enabled = true;
             }
         }
 
@@ -98,6 +109,33 @@ namespace Mail_Attachment_Downloader
         {
             logTextBox.SelectionStart = logTextBox.Text.Length;
             logTextBox.ScrollToCaret();
+        }
+
+        private void exitBtn_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        async private void button1_Click_1(object sender, EventArgs e)
+        {
+            int port = int.Parse(portText.Text);
+            Mailer mailer = new Mailer(emailText.Text, passText.Text, port, hostText.Text, sslCheck.Checked, saveText.Text, new RichTextBoxTarget());
+
+            try
+            {
+                if (imapCheck.Checked)
+                    await mailer.ConnectImapAsync();
+                else
+                    await mailer.ConnectPOPAsync();
+            }
+            catch (AuthenticationException)
+            {
+
+            }
+            catch (SocketException)
+            {
+
+            }
         }
     }
 }

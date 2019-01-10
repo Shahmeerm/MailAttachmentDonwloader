@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.sslCheck = new System.Windows.Forms.CheckBox();
             this.exitBtn = new System.Windows.Forms.Button();
             this.syncBtn = new System.Windows.Forms.Button();
             this.chooseBtn = new System.Windows.Forms.Button();
@@ -51,13 +51,15 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.logTextBox = new System.Windows.Forms.RichTextBox();
             this.systemTray = new System.Windows.Forms.NotifyIcon(this.components);
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.checkBox1);
+            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.sslCheck);
             this.groupBox1.Controls.Add(this.exitBtn);
             this.groupBox1.Controls.Add(this.syncBtn);
             this.groupBox1.Controls.Add(this.chooseBtn);
@@ -77,34 +79,37 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox1.Location = new System.Drawing.Point(5, 10);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(333, 338);
+            this.groupBox1.Size = new System.Drawing.Size(333, 330);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Global Settings";
             // 
-            // checkBox1
+            // sslCheck
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(231, 141);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(64, 19);
-            this.checkBox1.TabIndex = 16;
-            this.checkBox1.Text = "Default";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.sslCheck.AutoSize = true;
+            this.sslCheck.Checked = true;
+            this.sslCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.sslCheck.Location = new System.Drawing.Point(231, 141);
+            this.sslCheck.Name = "sslCheck";
+            this.sslCheck.Size = new System.Drawing.Size(44, 19);
+            this.sslCheck.TabIndex = 16;
+            this.sslCheck.Text = "SSL";
+            this.sslCheck.UseVisualStyleBackColor = true;
+            this.sslCheck.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // exitBtn
             // 
-            this.exitBtn.Location = new System.Drawing.Point(220, 263);
+            this.exitBtn.Location = new System.Drawing.Point(220, 296);
             this.exitBtn.Name = "exitBtn";
             this.exitBtn.Size = new System.Drawing.Size(75, 23);
             this.exitBtn.TabIndex = 15;
             this.exitBtn.Text = "Exit";
             this.exitBtn.UseVisualStyleBackColor = true;
+            this.exitBtn.Click += new System.EventHandler(this.exitBtn_Click);
             // 
             // syncBtn
             // 
-            this.syncBtn.Location = new System.Drawing.Point(137, 263);
+            this.syncBtn.Location = new System.Drawing.Point(137, 296);
             this.syncBtn.Name = "syncBtn";
             this.syncBtn.Size = new System.Drawing.Size(71, 23);
             this.syncBtn.TabIndex = 14;
@@ -114,7 +119,7 @@
             // 
             // chooseBtn
             // 
-            this.chooseBtn.Location = new System.Drawing.Point(267, 208);
+            this.chooseBtn.Location = new System.Drawing.Point(267, 249);
             this.chooseBtn.Name = "chooseBtn";
             this.chooseBtn.Size = new System.Drawing.Size(28, 23);
             this.chooseBtn.TabIndex = 13;
@@ -124,7 +129,7 @@
             // 
             // saveText
             // 
-            this.saveText.Location = new System.Drawing.Point(137, 208);
+            this.saveText.Location = new System.Drawing.Point(137, 249);
             this.saveText.Name = "saveText";
             this.saveText.Size = new System.Drawing.Size(124, 23);
             this.saveText.TabIndex = 12;
@@ -132,7 +137,7 @@
             // saveLabel
             // 
             this.saveLabel.AutoSize = true;
-            this.saveLabel.Location = new System.Drawing.Point(17, 208);
+            this.saveLabel.Location = new System.Drawing.Point(17, 249);
             this.saveLabel.Name = "saveLabel";
             this.saveLabel.Size = new System.Drawing.Size(85, 15);
             this.saveLabel.TabIndex = 11;
@@ -177,6 +182,7 @@
             this.portText.Name = "portText";
             this.portText.Size = new System.Drawing.Size(71, 23);
             this.portText.TabIndex = 7;
+            this.portText.Text = "993";
             // 
             // portLabel
             // 
@@ -193,6 +199,7 @@
             this.hostText.Name = "hostText";
             this.hostText.Size = new System.Drawing.Size(158, 23);
             this.hostText.TabIndex = 5;
+            this.hostText.Text = "imap.gmail.com";
             // 
             // hostLabel
             // 
@@ -228,6 +235,7 @@
             this.passText.PasswordChar = '●';
             this.passText.Size = new System.Drawing.Size(158, 23);
             this.passText.TabIndex = 1;
+            this.passText.Text = "Ars2763!";
             // 
             // emailText
             // 
@@ -235,6 +243,7 @@
             this.emailText.Name = "emailText";
             this.emailText.Size = new System.Drawing.Size(158, 23);
             this.emailText.TabIndex = 0;
+            this.emailText.Text = "arswurfel@gmail.com";
             // 
             // groupBox2
             // 
@@ -244,7 +253,7 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(5);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(7, 5, 5, 5);
-            this.groupBox2.Size = new System.Drawing.Size(356, 338);
+            this.groupBox2.Size = new System.Drawing.Size(356, 330);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Logs";
@@ -255,7 +264,7 @@
             this.logTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.logTextBox.Location = new System.Drawing.Point(7, 21);
             this.logTextBox.Name = "logTextBox";
-            this.logTextBox.Size = new System.Drawing.Size(344, 312);
+            this.logTextBox.Size = new System.Drawing.Size(344, 304);
             this.logTextBox.TabIndex = 0;
             this.logTextBox.Text = "";
             this.logTextBox.TextChanged += new System.EventHandler(this.logTextBox_TextChanged);
@@ -267,11 +276,21 @@
             this.systemTray.Visible = true;
             this.systemTray.DoubleClick += new System.EventHandler(this.systemTray_DoubleClick);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(137, 207);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(124, 23);
+            this.button1.TabIndex = 17;
+            this.button1.Text = "Test Connetion";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(707, 353);
+            this.ClientSize = new System.Drawing.Size(707, 345);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -309,7 +328,8 @@
         private System.Windows.Forms.Button syncBtn;
         private System.Windows.Forms.NotifyIcon systemTray;
         private System.Windows.Forms.RichTextBox logTextBox;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox sslCheck;
+        private System.Windows.Forms.Button button1;
     }
 }
 
