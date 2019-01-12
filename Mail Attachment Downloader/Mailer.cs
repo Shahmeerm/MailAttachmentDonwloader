@@ -42,7 +42,7 @@ namespace Mail_Attachment_Downloader
             this.directory = directory;
         }
 
-        async public Task<ImapClient> SaveAttachmentsImapAsync()
+        async public Task<ImapClient> SaveAttachmentsImapAsync(System.Threading.CancellationToken token)
         {
             using ( imapClient = new ImapClient())
             {
@@ -55,8 +55,11 @@ namespace Mail_Attachment_Downloader
                     await imapClient.AuthenticateAsync(email, pass);
                     logger.Info("Connected to " + email);
 
+                    logger.Info("Sychronization Started...");
+
                     while (true)
                     {
+                        token.ThrowIfCancellationRequested();
                         var inbox = imapClient.Inbox;
                         await inbox.OpenAsync(FolderAccess.ReadWrite);
 
@@ -74,13 +77,13 @@ namespace Mail_Attachment_Downloader
                                     if (attachment is MessagePart)
                                     {
                                         var part = (MessagePart)attachment;
-                                        logger.Info("Found -> " + fileName);
+                                        logger.Trace("Found -> " + fileName);
                                         await part.Message.WriteToAsync(stream);
                                     }
                                     else
                                     {
                                         var part = (MimePart)attachment;
-                                        logger.Info("Found -> " + fileName);
+                                        logger.Trace("Found -> " + fileName);
                                         await part.Content.DecodeToAsync(stream);
                                     }
                                 }
@@ -88,7 +91,9 @@ namespace Mail_Attachment_Downloader
 
                             await inbox.AddFlagsAsync(uid, MessageFlags.Seen, true);
                         }
-                        await Task.Delay(30000);
+                        
+                        await Task.Delay(30000 , token);
+
                     }
                 }
                 catch (System.Net.Sockets.SocketException)
@@ -97,6 +102,9 @@ namespace Mail_Attachment_Downloader
                 }
                 catch (MailKit.Security.AuthenticationException)
                 {
+                    throw;
+                }
+                catch (OperationCanceledException) {
                     throw;
                 }
 
@@ -113,20 +121,18 @@ namespace Mail_Attachment_Downloader
 
                 try
                 {
-                    logger.Info("Connecting to " + email);
+                    logger.Info("Testing Connection to " + email);
                     await popClient.ConnectAsync(host, port, SSL);
                     await popClient.AuthenticateAsync(email, pass);
-                    logger.Info("Connected to " + email);
+                    logger.Info("Successfully Connected to " + email);
                 }
                 catch (System.Net.Sockets.SocketException)
                 {
-                    logger.Info("Internet Connectivity Issue");
-                    throw;
+                    logger.Error("Internet Connectivity Issue");
                 }
                 catch (MailKit.Security.AuthenticationException)
                 {
-                    logger.Info("Authentication Failed");
-                    throw;
+                    logger.Error("Wrong Username/Password/Host");
                 }
             }
         }
@@ -139,23 +145,24 @@ namespace Mail_Attachment_Downloader
 
                 try
                 {
-                    logger.Info("Connecting to " + email);
+                    logger.Info("Testing Connection to " + email);
                     await imapClient.ConnectAsync(host, port, SSL);
                     await imapClient.AuthenticateAsync(email, pass);
-                    logger.Info("Connected to " + email);
+                    logger.Info("Successfully Connected to " + email);
                 }
                 catch (System.Net.Sockets.SocketException)
                 {
-                    throw;
+                    logger.Error("Internet Connectivity Issue");
                 }
                 catch (MailKit.Security.AuthenticationException)
                 {
+                    logger.Error("Wrong Username/Password/Host");
                     throw;
                 }
             }
         }
 
-        async public Task<ImapClient> SaveAttachmentsPOPAsync()
+        async public Task<ImapClient> SaveAttachmentsPOPAsync(System.Threading.CancellationToken token)
         {
             using (popClient = new Pop3Client())
             {
@@ -167,32 +174,37 @@ namespace Mail_Attachment_Downloader
                     await popClient.ConnectAsync(host, port, SSL);
                     await popClient.AuthenticateAsync(email, pass);
                     logger.Info("Connected to " + email);
+                    logger.Info("Sychronization Started...");
 
-
-                    for (int i = 0; i < popClient.Count; i++)
+                    while (true)
                     {
-                        var message = await popClient.GetMessageAsync(i);
-
-                        foreach (var attachment in message.Attachments)
+                        for (int i = 0; i < popClient.Count; i++)
                         {
-                            var fileName = attachment.ContentDisposition?.FileName ?? attachment.ContentType.Name;
-                            using (var stream = File.Create( directory + Path.DirectorySeparatorChar + fileName))
+                            var message = await popClient.GetMessageAsync(i);
+
+                            foreach (var attachment in message.Attachments)
                             {
-                                if (attachment is MessagePart)
+                                var fileName = attachment.ContentDisposition?.FileName ?? attachment.ContentType.Name;
+                                using (var stream = File.Create(directory + Path.DirectorySeparatorChar + fileName))
                                 {
-                                    var part = (MessagePart)attachment;
-                                    logger.Info("Found -> " + fileName);
-                                    await part.Message.WriteToAsync(stream);
-                                }
-                                else
-                                {
-                                    var part = (MimePart)attachment;
-                                    logger.Info("Found -> " + fileName);
-                                    await part.Content.DecodeToAsync(stream);
+                                    if (attachment is MessagePart)
+                                    {
+                                        var part = (MessagePart)attachment;
+                                        logger.Trace("Found -> " + fileName);
+                                        await part.Message.WriteToAsync(stream);
+                                    }
+                                    else
+                                    {
+                                        var part = (MimePart)attachment;
+                                        logger.Trace("Found -> " + fileName);
+                                        await part.Content.DecodeToAsync(stream);
+                                    }
                                 }
                             }
                         }
                     }
+
+                    await Task.Delay(30000, token);
                 }
                 catch (System.Net.Sockets.SocketException)
                 {
@@ -237,6 +249,31 @@ namespace Mail_Attachment_Downloader
 
             if (logger == null)
             {
+                rtbTarget.UseDefaultRowColoringRules = false;
+                rtbTarget.RowColoringRules.Add(
+                    new RichTextBoxRowColoringRule (
+                        "level == LogLevel.Info", 
+                        "DarkGray",
+                        "White"
+                        )
+                    );
+
+                rtbTarget.RowColoringRules.Add(
+                    new RichTextBoxRowColoringRule(
+                        "level == LogLevel.Error",
+                        "Red",
+                        "White"
+                        )
+                    );
+
+                rtbTarget.RowColoringRules.Add(
+                    new RichTextBoxRowColoringRule(
+                        "level == LogLevel.Trace",
+                        "Blue",
+                        "White"
+                        )
+                    );
+
                 LoggingConfiguration logConfig = new LoggingConfiguration();
                 FileTarget fileTarget = new FileTarget();
                 

@@ -74,17 +74,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="CenterWinDialog.cs" />
+    <Compile Include="MailDownloader.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="MailDownloader.Designer.cs">
+      <DependentUpon>MailDownloader.cs</DependentUpon>
     </Compile>
     <Compile Include="Mailer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="MailDownloader.resx">
+      <DependentUpon>MailDownloader.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -94,6 +95,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -111,6 +113,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Mail.ico" />
+    <None Include="Resources\iconfinder_Close_2001866%281%29.png" />
+    <None Include="Resources\iconfinder_1-22_3447425.png" />
+    <None Include="Resources\iconfinder_1-25_3447450.png" />
+    <None Include="Resources\iconfinder_1-12_3447435.png" />
+    <None Include="Resources\iconfinder_1-11_3447436.png" />
+    <None Include="Resources\iconfinder_synced_512538.png" />
+    <None Include="Resources\iconfinder_Continue_ellipsis_menu_more_options_1886823.png" />
+    <None Include="Resources\iconfinder_switch_1282965%281%29.png" />
+    <None Include="Resources\iconfinder_Wifi_566029.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
