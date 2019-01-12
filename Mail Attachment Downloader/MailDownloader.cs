@@ -27,10 +27,11 @@ namespace Mail_Attachment_Downloader
             InitializeComponent();
         }
 
+        // Method which is called when user double clicks the icon in taskbar
         private void systemTray_DoubleClick(object sender, EventArgs e)
         {
-            Show();
-            WindowState = FormWindowState.Normal;
+            Show(); // Show the Window to user
+            WindowState = FormWindowState.Normal; // Set the Window state to Norma
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -74,8 +75,9 @@ namespace Mail_Attachment_Downloader
             cancelToken = new CancellationTokenSource();
 
             RichTextBoxTarget rtb = new RichTextBoxTarget();
-            rtb.FormName = "Form1";
+            rtb.FormName = "MailDownloader";
             rtb.ControlName = "logTextBox";
+
             progressBar.Style = ProgressBarStyle.Marquee;
             progressBar.MarqueeAnimationSpeed = 30;
             progressBar.Value = 100;
@@ -158,6 +160,8 @@ namespace Mail_Attachment_Downloader
 
         private void exitBtn_Click(object sender, EventArgs e)
         {
+            if (cancelToken != null)
+            cancelToken.Cancel();
             this.Close();
         }
 
@@ -165,7 +169,7 @@ namespace Mail_Attachment_Downloader
         {
             
             RichTextBoxTarget rtb = new RichTextBoxTarget();
-            rtb.FormName = "Form1";
+            rtb.FormName = "MailDownloader";
             rtb.ControlName = "logTextBox";
 
 
